@@ -2,855 +2,387 @@
 <html lang="es">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<title>Los Exploradores del Ciber-Océano: La Ruta del Candado Dorado</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Exploradores del Ciber-Océano: La Ruta del Candado Dorado</title>
 <style>
-  /* ===========================
-     ESTILOS GENERALES (ALTO CONTRASTE + TIPOGRAFÍA LEGIBLE)
-     =========================== */
-  :root{
-    --bg:#0b1220;
-    --panel:#101a33;
-    --panel-soft:#0f1a38;
-    --accent:#00d9ff;
-    --accent-2:#00ffa6;
-    --warn:#ff3b3b;
-    --safe:#18ff7e;
-    --gold:#ffcc33;
-    --text:#e8f1ff;
-    --muted:#a7b7d6;
-    --shadow: 0 10px 30px rgba(0,0,0,.4);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    background: radial-gradient(1200px 700px at 70% -10%, #142753, var(--bg));
-    color:var(--text);
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji","Segoe UI Emoji";
-  }
-  button{
-    background: linear-gradient(180deg, #0ff 0%, #05b9f0 100%);
-    color:#00243b;
-    border:none;
-    border-radius:14px;
-    padding:12px 16px;
-    font-weight:800;
-    cursor:pointer;
-    box-shadow:var(--shadow);
-    transition: transform .06s ease, filter .2s ease;
-    outline-offset: 3px;
-  }
-  button:active{ transform: scale(.98) }
-  button.alt{
-    background: linear-gradient(180deg, #fff 0%, #d7e8ff 100%);
-    color:#07283d;
-  }
-  button.danger{
-    background: linear-gradient(180deg, #ff6a6a 0%, #ff3b3b 100%);
-    color:#2b0000;
-  }
-  button.safe{
-    background: linear-gradient(180deg, #b4ffdf 0%, #18ff7e 100%);
-    color:#00331e;
-  }
-  .small{font-size:.9rem; padding:.5rem .7rem; border-radius:10px}
-  .ghost{
-    background:transparent; border:2px solid var(--accent); color:var(--accent)
-  }
-  .wrap{
-    max-width:1100px; margin:0 auto; padding:16px;
-  }
-  .card{
-    background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-    backdrop-filter: blur(4px);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:20px; padding:18px; box-shadow:var(--shadow);
-  }
-  h1,h2,h3{margin:.2em 0 .4em 0}
-  h1{font-size: clamp(1.6rem, 3vw, 2.4rem)}
-  h2{font-size: clamp(1.3rem, 2.2vw, 1.8rem)}
-  p{color:var(--muted); line-height:1.5}
-  .grid{
-    display:grid; gap:16px;
-  }
-  .cols-2{ grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); }
-  .center{ text-align:center }
-  .sr-only{
-    position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  :root {
+    --bg: #05192d;
+    --panel: #102a43;
+    --accent: #00d9ff;
+    --gold: #ffcc33;
+    --safe: #2ecc71;
+    --danger: #e74c3c;
+    --text: #ffffff;
   }
 
-  /* ===========================
-     HUD (ENERGÍA, PASOS, HERRAMIENTAS)
-     =========================== */
-  .hud{
-    position: sticky; top:0; z-index:50; padding:12px 16px; background: linear-gradient(180deg, rgba(9,15,30,.9) 0%, rgba(9,15,30,.6) 100%); border-bottom:1px solid rgba(255,255,255,.08);
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-  }
-  .bar{
-    width:220px; height:16px; border-radius:12px; overflow:hidden; background:#21355f; border:1px solid rgba(255,255,255,.2)
-  }
-  .bar > i{
-    display:block; height:100%; background: linear-gradient(90deg, #2df, #18ff7e);
-    width:100%;
-  }
-  .hud-badges{
-    display:flex; gap:8px; flex-wrap:wrap; align-items:center
-  }
-  .badge{
-    display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px;
-    background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); color:var(--text); font-weight:700; box-shadow:var(--shadow);
-  }
-  .treasures{
-    display:flex; gap:6px; align-items:center; flex-wrap:wrap;
-  }
-  .treasures .piece{
-    width:26px; height:26px; border-radius:8px; background: linear-gradient(180deg, #ffe391, #ffcc33);
-    border:1px solid #b38700; display:grid; place-content:center; color:#2b1c00; font-weight:900; box-shadow:var(--shadow);
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Comic Sans MS', 'Arial', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+    touch-action: manipulation;
+    user-select: none;
   }
 
-  /* ===========================
-     PANTALLAS (SPA)
-     =========================== */
-  .screen{ display:none }
-  .screen.active{ display:block; animation: fade .25s ease }
-  @keyframes fade{ from{opacity:.01; transform: translateY(4px)} to{opacity:1; transform:none} }
-
-  /* ===========================
-     MAPA 2D ESTÁTICO
-     =========================== */
-  .map{
-    position:relative;
-    height:430px;
-    border-radius:20px; overflow:hidden;
-    background:
-      radial-gradient(130px 80px at 10% 20%, rgba(255,255,255,.08), transparent 60%),
-      radial-gradient(240px 160px at 70% 40%, rgba(255,255,255,.06), transparent 60%),
-      linear-gradient(180deg, #0a2147 0%, #04122b 100%);
-    border:1px solid rgba(255,255,255,.12);
-  }
-  .nav-point{
-    position:absolute; width:62px; height:62px; border-radius:16px; display:grid; place-items:center; cursor:pointer;
-    background: radial-gradient(100% 100% at 50% 10%, #fff, #d7f8ff);
-    color:#07283d; border:2px solid var(--accent); box-shadow: var(--shadow);
-    font-size:28px;
-  }
-  .nav-point:hover{ filter: brightness(1.05) }
-  .nav-point[data-id="1"]{ left:8%; top:58% }
-  .nav-point[data-id="2"]{ left:32%; top:34% }
-  .nav-point[data-id="3"]{ left:58%; top:64% }
-  .nav-point[data-id="4"]{ left:82%; top:28% }
-
-  /* Submarino (simple SVG animado) */
-  .sub{
-    position:absolute; width:86px; height:54px; left:3%; top:75%; transition: left .6s ease, top .6s ease;
-    filter: drop-shadow(0 8px 20px rgba(0,0,0,.5));
+  /* --- HUD --- */
+  #hud {
+    position: absolute;
+    top: 0; width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.6);
+    z-index: 100;
+    box-sizing: border-box;
   }
 
-  /* Modal de puzzle / decisiones */
-  .modal{
-    position:fixed; inset:0; background: rgba(0,0,0,.5);
-    display:none; align-items:center; justify-content:center; z-index:60;
-  }
-  .modal.active{ display:flex }
-  .modal .box{
-    width:min(720px, 92vw); background: var(--panel); border-radius:24px; border:1px solid rgba(255,255,255,.12); box-shadow:var(--shadow); padding:18px;
-  }
-  .options{
-    margin-top:10px; display:grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap:12px;
-  }
-  .option{
-    background: var(--panel-soft); border:2px solid rgba(255,255,255,.12); border-radius:16px; padding:14px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center;
-    transition: transform .05s ease, border-color .2s ease, box-shadow .2s ease;
-  }
-  .option:active{ transform: scale(.98) }
-  .option .big{ font-size:42px }
-  .option.safe{ border-color: var(--safe) }
-  .option.danger{ border-color: var(--warn) }
-
-  /* Pantalla final */
-  .celebrate{
-    display:grid; place-items:center; min-height:260px; text-align:center;
-    background:
-      radial-gradient(180px 100px at 20% 10%, rgba(255,255,255,.08), transparent 60%),
-      radial-gradient(220px 120px at 80% 20%, rgba(255,255,255,.08), transparent 60%),
-      linear-gradient(180deg, #0f2a58 0%, #061638 100%);
-    border:1px solid rgba(255,255,255,.12); border-radius:20px; padding:18px;
+  .energy-container {
+    width: 150px; height: 20px;
+    background: #334e68; border-radius: 10px;
+    border: 2px solid white; overflow: hidden;
   }
 
-  /* Botonera de herramientas (flotante en móvil) */
-  .tools{
-    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-  }
-  @media (max-width:720px){
-    .hud{ position: sticky }
-    .tools{ position: fixed; right:12px; bottom:12px; z-index:55 }
-    .tools button{ box-shadow: 0 10px 24px rgba(0,0,0,.45) }
+  #energy-bar {
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, #2ecc71, #e74c3c);
+    transition: width 0.5s ease;
   }
 
-  /* Accesibilidad visual de foco */
-  :focus-visible{ outline: 3px solid var(--gold); outline-offset: 2px }
+  .controls-right { display: flex; gap: 8px; }
 
+  .btn-circle {
+    width: 45px; height: 45px; border-radius: 50%;
+    border: none; cursor: pointer; font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+  }
+
+  /* --- Pantallas --- */
+  .screen {
+    position: absolute; inset: 0;
+    display: none; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 20px; text-align: center;
+  }
+  .screen.active { display: flex; }
+
+  /* --- Mapa y Submarino --- */
+  #map-container {
+    width: 100%; height: 100%;
+    background: radial-gradient(circle, #1b4965 0%, #05192d 100%);
+    position: relative;
+  }
+
+  .nav-point {
+    position: absolute; width: 70px; height: 70px;
+    background: white; border-radius: 50%;
+    border: 5px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; font-weight: bold; color: var(--bg);
+    cursor: pointer; animation: pulse 2s infinite;
+    z-index: 10;
+  }
+
+  #submarine {
+    position: absolute; width: 90px;
+    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 5; pointer-events: none;
+  }
+
+  /* --- Modales --- */
+  #modal {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: none; z-index: 200;
+    justify-content: center; align-items: center;
+  }
+
+  .modal-content {
+    background: var(--panel); padding: 25px;
+    border-radius: 25px; max-width: 600px; width: 85%;
+    border: 4px solid var(--accent);
+  }
+
+  .option-card {
+    background: #243b53; padding: 15px;
+    border-radius: 15px; cursor: pointer;
+    margin: 10px 0; border: 3px solid transparent;
+    display: flex; align-items: center; gap: 15px;
+    transition: 0.2s; text-align: left;
+  }
+
+  .option-card:hover { border-color: var(--accent); background: #334e68; }
+
+  /* --- Botones --- */
+  .btn-ui {
+    padding: 15px 30px; border-radius: 50px;
+    border: none; font-weight: bold; font-size: 1.2rem;
+    cursor: pointer; box-shadow: 0 5px 0 rgba(0,0,0,0.2);
+    margin: 10px;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,217,255,0.7); }
+    70% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(0,217,255,0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,217,255,0); }
+  }
+
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
-  <!-- HUD con energía, pasos y herramientas -->
-  <div class="hud" role="region" aria-label="Estado del juego">
-    <div class="hud-badges">
-      <span class="badge" title="Energía de exploración">
-        ⚡ Energía
-        <span class="bar" aria-hidden="true"><i id="energyBar"></i></span>
-        <span id="energyText" class="sr-only">Energía al 100%</span>
-      </span>
-      <span class="badge" title="Contador de pasos">👣 Pasos: <strong id="steps">0</strong></span>
-      <span class="badge" title="Colección de Tesoros">
-        🗺️ Tesoros:
-        <span class="treasures" id="treasures"></span>
-      </span>
+
+  <div id="hud">
+    <div>
+      <div class="energy-container"><div id="energy-bar"></div></div>
     </div>
-    <div class="tools" role="toolbar" aria-label="Herramientas de seguridad">
-      <button id="btnFlare" class="danger" aria-label="Bengala de Ayuda" title="Bengala de Ayuda 🚨 (Atajo: P.A.R.)">🚨 Bengala</button>
-      <button id="btnClose" class="alt" aria-label="Cerrar Ventana" title="Cerrar Ventana ❌">❌ Cerrar</button>
-      <button id="btnPAR" class="ghost small" aria-label="Activar Protocolo P.A.R." title="Activar Protocolo de Acción Responsable">P.A.R.</button>
-      <button id="btnVoice" class="ghost small" aria-pressed="false" aria-label="Narración por voz">🔊 Voz: OFF</button>
+    <div class="controls-right">
+      <button id="btn-audio" class="btn-circle" onclick="toggleAudio()" title="Activar/Desactivar Audio">🔊</button>
+      <button class="btn-circle" style="background:#e67e22" onclick="useFlare()">🚨</button>
+      <button class="btn-circle" style="background:#9b59b6" onclick="activatePAR()">💡</button>
     </div>
   </div>
 
-  <main class="wrap">
-    <!-- =============== PANTALLA 1: PUERTO DIGITAL (BRIEFING) =============== -->
-    <section id="screen-brief" class="screen active" aria-labelledby="t-brief">
-      <div class="grid cols-2">
-        <div class="card">
-          <h1 id="t-brief">Puerto Digital</h1>
-          <p role="doc-subtitle">Misión: <strong>Ciudadanía Digital</strong> — Reconocer señales de seguridad y pedir ayuda al navegar.</p>
-          <div class="grid">
-            <div class="card">
-              <h2>Almirante de Flota (Guía)</h2>
-              <p>¡Bienvenido, Explorador! Hoy aprenderás a moverte por el Ciber-Océano con seguridad.</p>
-              <ul>
-                <li>🔒 <strong>Candado Dorado</strong> → Camino seguro.</li>
-                <li>🛡️ <strong>Logos Conocidos</strong> → Plataformas amigas.</li>
-                <li>🧭 <strong>Regla del Explorador Sabio</strong> → Si algo es raro, usa la <em>Bengala 🚨</em> y pide ayuda.</li>
-              </ul>
-              <p><em>Frase de poder:</em> <strong>“¡Si veo el candado dorado, navego más confiado!”</strong></p>
-              <div class="hud-badges" aria-label="Personaliza tu submarino">
-                <span class="badge">⚙️ Submarino: 
-                  <button class="small alt" data-skin="#00d9ff">Cian</button>
-                  <button class="small alt" data-skin="#ffcc33">Dorado</button>
-                  <button class="small alt" data-skin="#ff6adf">Magenta</button>
-                  <button class="small alt" data-skin="#18ff7e">Verde</button>
-                </span>
-              </div>
-              <div class="center" style="margin-top:10px">
-                <button id="startBtn">🛳️ ¡Zarpar!</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card center" aria-hidden="true">
-          <!-- Avatar adulto + Candado dorado SVG de alta resolución (vector) -->
-          <svg width="100%" viewBox="0 0 400 300" role="img" aria-label="Candado dorado y Almirante">
-            <defs>
-              <linearGradient id="gold" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0" stop-color="#fff1a8"/>
-                <stop offset="1" stop-color="#ffcc33"/>
-              </linearGradient>
-              <linearGradient id="coat" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0" stop-color="#0bc2ff"/>
-                <stop offset="1" stop-color="#0a6fb3"/>
-              </linearGradient>
-            </defs>
-            <!-- Candado -->
-            <rect x="250" y="120" width="110" height="120" rx="16" fill="url(#gold)" stroke="#b38700" stroke-width="4"></rect>
-            <path d="M 270 120 C 270 80 340 80 340 120" fill="none" stroke="#b38700" stroke-width="16" />
-            <circle cx="305" cy="175" r="10" fill="#2b1c00"/>
-            <!-- Almirante (estilizado) -->
-            <circle cx="100" cy="110" r="38" fill="#ffd9b3"/>
-            <rect x="60" y="150" width="80" height="110" rx="12" fill="url(#coat)"/>
-            <rect x="60" y="210" width="80" height="8" fill="#fff"/>
-            <rect x="92" y="145" width="16" height="16" fill="#fff" />
-            <text x="45" y="280" fill="#a7b7d6" font-weight="700" font-size="18">Almirante de Flota</text>
-          </svg>
-        </div>
-      </div>
-    </section>
+  <!-- INTRODUCCIÓN -->
+  <section id="screen-intro" class="screen active">
+    <span style="font-size: 5rem;">👨‍✈️</span>
+    <h1 id="intro-title">¡Hola, Capitán!</h1>
+    <div id="brief-box" style="min-height: 150px;">
+      <p id="brief-text">Soy tu Almirante. Pulsa el botón verde para aprender las reglas.</p>
+    </div>
+    <div style="display:flex; flex-wrap: wrap; justify-content: center;">
+      <button id="btn-next" class="btn-ui" style="background:var(--safe)" onclick="nextBriefing()">Siguiente</button>
+      <button id="btn-skip" class="btn-ui" style="background:#95a5a6" onclick="skipTutorial()">Saltar Tutorial</button>
+    </div>
+  </section>
 
-    <!-- =============== PANTALLA 2: MAPA DEL CIBER-OCÉANO =============== -->
-    <section id="screen-map" class="screen" aria-labelledby="t-map">
-      <h2 id="t-map">Mapa del Ciber-Océano</h2>
-      <p>Navega tocando/clicando los puntos. En cada punto enfrentarás una decisión de seguridad digital.</p>
-      <div class="card map" aria-label="Mapa con puntos de navegación">
-        <!-- Submarino del jugador (SVG) -->
-        <svg class="sub" id="submarine" viewBox="0 0 200 120" aria-label="Submarino del jugador" role="img">
-          <defs>
-            <linearGradient id="subGrad" x1="0" x2="1">
-              <stop offset="0" stop-color="#00d9ff"/><stop offset="1" stop-color="#006eff"/>
-            </linearGradient>
-          </defs>
-          <ellipse cx="90" cy="60" rx="70" ry="35" fill="url(#subGrad)" stroke="#07283d" stroke-width="4"/>
-          <circle cx="38" cy="58" r="12" fill="#aef" stroke="#07283d" stroke-width="4"/>
-          <rect x="120" y="45" width="24" height="26" rx="4" fill="#aef" stroke="#07283d" stroke-width="4"/>
-          <rect x="130" y="20" width="16" height="18" rx="4" fill="#aef" stroke="#07283d" stroke-width="4"/>
-          <path d="M160 60 l26 -8 v16 z" fill="#00ffa6" stroke="#07283d" stroke-width="4"/>
-        </svg>
+  <!-- MAPA -->
+  <section id="screen-map" class="screen">
+    <div id="map-container">
+      <img src="https://cdn-icons-png.flaticon.com/512/3233/3233845.png" id="submarine" alt="Submarino">
+      <div id="p1" class="nav-point" style="left: 15%; top: 60%;" onclick="startChallenge(0)">1</div>
+      <div id="p2" class="nav-point" style="left: 45%; top: 30%;" onclick="startChallenge(1)">2</div>
+      <div id="p3" class="nav-point" style="left: 75%; top: 65%;" onclick="startChallenge(2)">3</div>
+    </div>
+  </section>
 
-        <!-- Puntos interactivos -->
-        <div class="nav-point" tabindex="0" data-id="1" aria-label="Punto 1: La Puerta Segura" title="Escenario 1">1</div>
-        <div class="nav-point" tabindex="0" data-id="2" aria-label="Punto 2: Pop-Up Trampa" title="Escenario 2">2</div>
-        <div class="nav-point" tabindex="0" data-id="3" aria-label="Punto 3: Remolino Desconocido" title="Escenario 3">3</div>
-        <div class="nav-point" tabindex="0" data-id="4" aria-label="Punto 4: Reto Claro (opcional)" title="Escenario 4">4</div>
-      </div>
-    </section>
+  <!-- FINAL -->
+  <section id="screen-end" class="screen">
+    <h1 id="end-title">¡Misión Cumplida!</h1>
+    <span id="end-icon" style="font-size: 5rem;">🏝️</span>
+    <p id="end-msg"></p>
+    <button class="btn-ui" style="background:var(--accent)" onclick="restartGame()">↻ Jugar de Nuevo</button>
+  </section>
 
-    <!-- =============== PANTALLA 3: FINAL =============== -->
-    <section id="screen-end" class="screen" aria-labelledby="t-end">
-      <h2 id="t-end">Isla del Tesoro Educativo</h2>
-      <div class="celebrate" id="endBox">
-        <!-- Se rellena dinámicamente con victoria o reinicio -->
-      </div>
-      <div class="center" style="margin-top:12px">
-        <button id="btnReplay" class="alt">↻ Jugar de nuevo</button>
-      </div>
-    </section>
-  </main>
-
-  <!-- Modal de decisiones / puzzles -->
-  <div class="modal" id="modal">
-    <div class="box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <h3 id="modalTitle">Escenario</h3>
-      <p id="modalDesc">Descripción del escenario…</p>
-      <div class="options" id="options"></div>
-      <div class="center" style="margin-top:8px">
-        <button id="modalClose" class="ghost">Cerrar</button>
-      </div>
+  <!-- MODAL DE DESAFÍO -->
+  <div id="modal">
+    <div class="modal-content">
+      <h2 id="modal-title" style="color:var(--accent)"></h2>
+      <p id="modal-desc" style="font-size: 1.3rem;"></p>
+      <div id="options-container"></div>
     </div>
   </div>
 
 <script>
-/* ============================================================
-   LÓGICA DEL JUEGO (VANILLA JS) — COMENTADO EN ESPAÑOL
-   ============================================================ */
-
-/* -------------------------
-   ESTADO GLOBAL DEL JUEGO
-   ------------------------- */
-const state = {
-  energyMax: 100,
+/* --- ESTADO DEL JUEGO --- */
+let state = {
   energy: 100,
-  steps: 0,
-  voiceOn: false,
-  treasures: 0,
-  completed: new Set(), // puntos completados
-  subSkin: '#00d9ff',
-  paused: false,
-  parBuffer: '', // para detectar "PAR" por teclado
+  audioEnabled: true,
+  briefingIndex: 0,
+  completedChallenges: [],
+  currentChallengeIdx: null
 };
 
-/* -------------------------
-   REFERENCIAS A ELEMENTOS
-   ------------------------- */
-const screens = {
-  brief: document.getElementById('screen-brief'),
-  map: document.getElementById('screen-map'),
-  end: document.getElementById('screen-end'),
-};
-const energyBar = document.getElementById('energyBar');
-const energyText = document.getElementById('energyText');
-const stepsEl = document.getElementById('steps');
-const treasuresEl = document.getElementById('treasures');
-const startBtn = document.getElementById('startBtn');
-const btnFlare = document.getElementById('btnFlare');
-const btnClose = document.getElementById('btnClose');
-const btnPAR = document.getElementById('btnPAR');
-const btnVoice = document.getElementById('btnVoice');
-const btnReplay = document.getElementById('btnReplay');
-const modal = document.getElementById('modal');
-const modalTitle = document.getElementById('modalTitle');
-const modalDesc = document.getElementById('modalDesc');
-const optionsWrap = document.getElementById('options');
-const modalClose = document.getElementById('modalClose');
-const submarine = document.getElementById('submarine');
-const endBox = document.getElementById('endBox');
+const briefingSteps = [
+  { text: "Regla 1: El Candado Cerrado Dorado es señal de seguridad. ¡Siempre búscalo!", icon: "🔒" },
+  { text: "Regla 2: Los logos de tu escuela son puertos seguros para navegar.", icon: "🏫" },
+  { text: "Regla 3: Si ves un candado abierto, ¡cuidado! Puede ser una trampa.", icon: "🔓" },
+  { text: "Regla 4: Si algo se ve extraño, usa la Bengala para pedirme ayuda.", icon: "🚨" }
+];
 
-/* -------------------------
-   AUDIO: SONIDOS SIN ARCHIVOS (WebAudio)
-   - Tono correcto, incorrecto, especial (radio)
-   ------------------------- */
-let audioCtx;
-function beep({freq=880, type='sine', dur=0.15, vol=0.25}={}){
-  try{
-    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.type = type; o.frequency.value = freq;
-    g.gain.value = vol;
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start();
-    setTimeout(()=>o.stop(), dur*1000);
-  }catch(e){}
-}
-const sfx = {
-  correcto(){ beep({freq:740, type:'triangle', dur:.18, vol:.22}); setTimeout(()=>beep({freq:980,type:'triangle',dur:.2,vol:.22}),120) },
-  error(){ beep({freq:180, type:'sawtooth', dur:.25, vol:.28}); },
-  puerta(){ beep({freq:500, type:'square', dur:.12, vol:.2}); setTimeout(()=>beep({freq:300, type:'square', dur:.16, vol:.2}),110); },
-  esquivar(){ beep({freq:950, type:'sine', dur:.09, vol:.18}); setTimeout(()=>beep({freq:600, type:'sine', dur:.09, vol:.18}),90); },
-  radio(){ beep({freq:600, type:'square', dur:.1, vol:.12}); setTimeout(()=>beep({freq:720, type:'square', dur:.08, vol:.12}),120); }
-};
+const challenges = [
+  {
+    title: "Las Tres Puertas",
+    desc: "¿Por qué puerta debemos pasar para estar seguros?",
+    options: [
+      { t: "Puerta con Candado Abierto 🔓", ok: false, msg: "¡No! Ese candado está abierto, no es seguro." },
+      { t: "Puerta de la Escuela con Candado Dorado 🏫🔒", ok: true, msg: "¡Muy bien! Es un sitio conocido y seguro." },
+      { t: "Puerta con una Llave Feliz 😊", ok: false, msg: "¡Cuidado! No tiene candado de seguridad." }
+    ]
+  },
+  {
+    title: "Los Cofres Tesoro",
+    desc: "Aparecen tres cofres. ¿Cuál es el correcto?",
+    options: [
+      { t: "Cofre que dice '¡PREMIO GRATIS!' 🎁", ok: false, msg: "¡Trampa! Los premios gratis suelen ser engaños." },
+      { t: "Cofre que pide tus datos personales 👤", ok: false, msg: "¡Nunca des tu nombre ni datos a desconocidos!" },
+      { t: "Cofre con el Logo de tu Escuela 🏫", ok: true, msg: "¡Exacto! Es un sitio de confianza." }
+    ]
+  },
+  {
+    title: "El Gran Remolino",
+    desc: "Hay un remolino con un signo de pregunta ❓. ¿Qué haces?",
+    options: [
+      { t: "Entrar a explorar solo 🌀", ok: false, msg: "Es peligroso entrar a lo desconocido sin ayuda." },
+      { t: "Llamar al Almirante con la Bengala 🚨", ok: true, msg: "¡Excelente decisión! Un buen explorador pide ayuda." }
+    ]
+  }
+];
 
-/* -------------------------
-   NARRACIÓN (SpeechSynthesis) ACCESIBLE
-   ------------------------- */
-function speak(text){
-  if(!state.voiceOn) return;
+/* --- AUDIO --- */
+function speak(text) {
+  if (!state.audioEnabled) return;
+  window.speechSynthesis.cancel();
   const utter = new SpeechSynthesisUtterance(text);
-  // Intento de seleccionar voz española si existe
-  const voices = speechSynthesis.getVoices();
-  const es = voices.find(v => /es-|Spanish|español/i.test(v.lang || v.name));
-  if(es) utter.voice = es;
-  utter.rate = 1; utter.pitch = 1;
-  speechSynthesis.cancel(); // evitar colas largas
-  speechSynthesis.speak(utter);
+  utter.lang = 'es-ES';
+  utter.rate = 1.0;
+  window.speechSynthesis.speak(utter);
 }
 
-/* -------------------------
-   UTILIDADES HUD
-   ------------------------- */
-function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
-function setEnergy(n){
-  state.energy = clamp(n, 0, state.energyMax);
-  const pct = (state.energy/state.energyMax)*100;
-  energyBar.style.width = pct + '%';
-  energyText.textContent = `Energía al ${Math.round(pct)}%`;
-  if(state.energy<=0){ endMission(false); }
-}
-function addStep(){ state.steps++; stepsEl.textContent = String(state.steps); }
-function addTreasure(){
-  state.treasures++;
-  const piece = document.createElement('span');
-  piece.className = 'piece';
-  piece.textContent = '★';
-  treasuresEl.appendChild(piece);
+function toggleAudio() {
+  state.audioEnabled = !state.audioEnabled;
+  const btn = document.getElementById('btn-audio');
+  btn.innerText = state.audioEnabled ? "🔊" : "🔇";
+  if (!state.audioEnabled) window.speechSynthesis.cancel();
+  else speak("Audio activado");
 }
 
-/* -------------------------
-   NAVEGACIÓN ENTRE PANTALLAS
-   ------------------------- */
-function show(screen){
-  Object.values(screens).forEach(s=>s.classList.remove('active'));
-  screens[screen].classList.add('active');
-}
-
-/* -------------------------
-   POSICIONAR SUBMARINO EN EL MAPA (animado)
-   ------------------------- */
-function moveSubToPoint(id){
-  const point = document.querySelector(`.nav-point[data-id="${id}"]`);
-  if(!point) return;
-  const map = point.parentElement;
-  const rectMap = map.getBoundingClientRect();
-  const rectPoint = point.getBoundingClientRect();
-  const left = (rectPoint.left - rectMap.left) + rectPoint.width/2 - 43; // 43 ≈ mitad ancho sub
-  const top  = (rectPoint.top - rectMap.top) + rectPoint.height/2 - 27; // 27 ≈ mitad alto sub
-  submarine.style.left = left + 'px';
-  submarine.style.top  = top  + 'px';
-}
-
-/* -------------------------
-   ESCENARIOS DEL JUEGO
-   ------------------------- */
-const SCENARIOS = {
-  1: {
-    title: 'Escenario 1 – La Puerta Segura',
-    desc: 'Frente a ti hay dos entradas. ¿Cuál es el camino seguro?',
-    options: [
-      { icon:'🔒', title:'Puerta con Candado Dorado y logo escolar', correct:true, explain:'¡Candado dorado! ¡Ruta segura detectada!', onWin:()=>{
-          sfx.puerta(); speak('¡Candado dorado! ¡Ruta segura detectada!');
-          addTreasure();
-        }
-      },
-      { icon:'🌌', title:'Cueva oscura sin señales', correct:false, explain:'¡Cuidado! Esa señal no era segura.', onLose:()=>{
-          sfx.error(); speak('¡Cuidado! Esa señal no era segura.');
-          setEnergy(state.energy-25);
-        }
-      }
-    ],
-    hint: 'Recuerda: ¡Si veo el candado dorado, navego más confiado!'
-  },
-  2: {
-    title: 'Escenario 2 – Pop-Up Trampa',
-    desc: 'Aparece un cofre emergente con el mensaje “¡PREMIO GRATIS!”. ¿Qué haces?',
-    options: [
-      { icon:'🧰', title:'Ignorar el cofre', correct:true, synthetic: true, explain:'¡Evitaste la trampa!', onWin:()=>{
-          sfx.esquivar(); speak('¡Evitaste la trampa!');
-          addTreasure();
-        }
-      },
-      { icon:'🪙', title:'Aceptar el premio', correct:false, explain:'¡Cuidado! Esa señal no era segura.', onLose:()=>{
-          sfx.error(); speak('¡Cuidado! Esa señal no era segura.');
-          setEnergy(state.energy-25);
-        }
-      }
-    ],
-    requiresCloseTool: true // También válida la herramienta ❌
-  },
-  3: {
-    title: 'Escenario 3 – Remolino Desconocido',
-    desc: 'Un remolino morado con un signo de interrogación bloquea tu paso.',
-    options: [
-      { icon:'🌀', title:'Entrar al remolino', correct:false, explain:'¡Cuidado! Esa señal no era segura.', onLose:()=>{
-          sfx.error(); speak('¡Cuidado! Esa señal no era segura.');
-          setEnergy(state.energy-25);
-        }
-      },
-      { icon:'🚨', title:'Usar Bengala de Ayuda', correct:true, synthetic: true, explain:'¡Señal recibida, trazando ruta segura!', onWin:()=>{
-          sfx.radio(); speak('¡Señal recibida, trazando ruta segura!');
-          addTreasure();
-        }
-      }
-    ],
-    requiresFlare: true // Sólo se supera con Bengala o P.A.R.
-  },
-  4: {
-    title: 'Escenario 4 – Reto Claro (opcional)',
-    desc: 'Un remolino traslúcido te propone un pequeño reto de memoria. Observa la secuencia y repítela.',
-    memory: true,
-    onComplete: ()=>{
-      sfx.correcto(); speak('Reto superado. ¡Puntos extra para un explorador atento!');
-      addTreasure();
-    }
+/* --- FLUJO TUTORIAL --- */
+function nextBriefing() {
+  if (state.briefingIndex < briefingSteps.length) {
+    const step = briefingSteps[state.briefingIndex];
+    document.getElementById('brief-box').innerHTML = `<span style="font-size:4rem">${step.icon}</span><p>${step.text}</p>`;
+    speak(step.text);
+    state.briefingIndex++;
+  } else {
+    skipTutorial();
   }
-};
+}
 
-/* -------------------------
-   MOSTRAR MODAL DE ESCENARIO
-   ------------------------- */
-function openScenario(id){
-  if(state.paused) return;
-  const sc = SCENARIOS[id];
-  if(!sc) return;
-  // Evitar reintentos infinitos tras completar
-  if(state.completed.has(id) && id!==4){ // el 4 es rejugable
-    speak('Este punto ya está despejado. Continúa.');
+function skipTutorial() {
+  document.getElementById('screen-intro').classList.remove('active');
+  document.getElementById('screen-map').classList.add('active');
+  speak("¡Ya estamos en el mapa! Toca el número 1 para empezar.");
+  updateSubmarinePosition(0);
+}
+
+/* --- DESAFÍOS --- */
+function startChallenge(idx) {
+  if (state.completedChallenges.includes(idx)) {
+    speak("Este camino ya es seguro, Capitán.");
     return;
   }
-  modal.classList.add('active');
-  modalTitle.textContent = sc.title;
-  modalDesc.textContent = sc.desc;
-  optionsWrap.innerHTML = '';
-  // Si es un reto de memoria (escenario 4)
-  if(sc.memory){
-    renderMemoryPuzzle();
-    return;
-  }
-  // Render opciones estándar
-  sc.options.forEach((opt, idx)=>{
-    const div = document.createElement('div');
-    div.className = 'option ' + (opt.correct?'safe':'danger');
-    div.tabIndex = 0;
-    div.innerHTML = `<div class="big" aria-hidden="true">${opt.icon}</div><strong>${opt.title}</strong>`;
-    div.addEventListener('click', ()=> pickOption(id, opt));
-    div.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); pickOption(id,opt);} });
-    optionsWrap.appendChild(div);
-  });
+  
+  state.currentChallengeIdx = idx;
+  updateSubmarinePosition(idx);
+  
+  const challenge = challenges[idx];
+  setTimeout(() => {
+    document.getElementById('modal').style.display = 'flex';
+    document.getElementById('modal-title').innerText = challenge.title;
+    document.getElementById('modal-desc').innerText = challenge.desc;
+    
+    // Leer título y descripción
+    speak(challenge.title + ". " + challenge.desc);
+
+    const container = document.getElementById('options-container');
+    container.innerHTML = '';
+    
+    challenge.options.forEach((opt, i) => {
+      const card = document.createElement('div');
+      card.className = 'option-card';
+      card.innerHTML = `<span style="font-size:2rem">🔹</span><p>${opt.t}</p>`;
+      card.onclick = () => {
+        checkAnswer(i);
+      };
+      container.appendChild(card);
+    });
+  }, 800);
 }
 
-/* -------------------------
-   ELECCIÓN DEL JUGADOR EN UN ESCENARIO
-   - Maneja herramientas especiales (❌ y 🚨)
-   ------------------------- */
-function pickOption(id, opt){
-  addStep();
-  if(opt.correct){
-    sfx.correcto();
-    if(opt.onWin) opt.onWin();
-    state.completed.add(id);
-    modal.classList.remove('active');
-    checkProgress();
-  }else{
-    if(opt.onLose) opt.onLose();
-    // Mostrar criaturas de spam como feedback visual
-    modalDesc.textContent = '¡Cuidado! Criaturas de Spam rondan por aquí. Vuelve a intentarlo con la señal correcta.';
-    speak('¡Cuidado! Esa señal no era segura');
-  }
-}
-
-/* -------------------------
-   ESCENARIO 2: aceptar herramienta ❌ como acción correcta
-   ESCENARIO 3: aceptar herramienta 🚨 (o P.A.R.) como acción correcta
-   ------------------------- */
-function useCloseTool(){
-  addStep();
-  const id = currentPointId;
-  if(id===2){ // Pop-up trampa
-    sfx.esquivar(); speak('¡Evitaste la trampa!');
-    addTreasure();
-    state.completed.add(2);
-    modal.classList.remove('active');
-    checkProgress();
-  }else{
-    speak('La herramienta Cerrar se usa para ventanas emergentes sospechosas.');
-  }
-}
-function useFlare(){
-  addStep();
-  const id = currentPointId;
-  if(id===3){
-    sfx.radio(); speak('¡Señal recibida, trazando ruta segura!');
-    addTreasure();
-    state.completed.add(3);
-    modal.classList.remove('active');
-    checkProgress();
-  }else{
-    speak('La Bengala se usa cuando el camino sea incierto o peligroso.');
-  }
-}
-
-/* -------------------------
-   PROGRESO Y CONDICIONES DE FIN
-   - Victoria: puntos 1,2,3 completados y energía > 0 → pantalla final positiva
-   - Reinicio: energía llega a 0 → pantalla final de remolque
-   ------------------------- */
-function checkProgress(){
-  const essential = [1,2,3];
-  const allDone = essential.every(id => state.completed.has(id));
-  if(allDone){
-    endMission(true);
-  }
-}
-function endMission(victory){
-  show('end');
-  endBox.innerHTML = '';
-  if(victory && state.energy>0){
-    // Celebración y título
-    const div = document.createElement('div');
-    div.innerHTML = `
-      <h3>🎉 ¡Misión cumplida!</h3>
-      <p>Has llegado a la <strong>Isla del Tesoro Educativo</strong> con energía suficiente.</p>
-      <p>¡Título obtenido: <strong>Explorador Maestro del Ciber-Océano</strong>!<br>
-      Tesoro reunido: ${state.treasures} piezas.</p>
-      <p class="badge">Frase de poder: “¡Si veo el candado dorado, navego más confiado!”</p>
-    `;
-    endBox.appendChild(div);
-    speak('Misión cumplida. Explorador Maestro del Ciber Océano.');
-    // Recompensa cosmética: cambiar color del submarino aleatoriamente
-    unlockSkinReward();
-  }else{
-    const div = document.createElement('div');
-    div.innerHTML = `
-      <h3>🛟 Energía agotada</h3>
-      <p>El Almirante te ha remolcado de vuelta al Puerto. ¡Inténtalo de nuevo!</p>
-    `;
-    endBox.appendChild(div);
-    speak('Energía agotada. Regreso al puerto para intentarlo de nuevo.');
-  }
-}
-
-/* -------------------------
-   RECOMPENSA DE PERSONALIZACIÓN
-   ------------------------- */
-function unlockSkinReward(){
-  const colors = ['#ffcc33','#18ff7e','#ff6adf','#a38bff','#00d9ff'];
-  const choice = colors[Math.floor(Math.random()*colors.length)];
-  setSubSkin(choice);
-}
-
-/* -------------------------
-   RENDER RETO DE MEMORIA (ESCENARIO 4)
-   ------------------------- */
-function renderMemoryPuzzle(){
-  const seq = Array.from({length: 4}, ()=> ['🔒','❌','🚨','🌀'][Math.floor(Math.random()*4)]);
-  modalDesc.textContent = 'Memoriza la secuencia y repítela tocando los botones en el mismo orden.';
-  const row = document.createElement('div'); row.className='options';
-  const icons = ['🔒','❌','🚨','🌀'];
-  icons.forEach(ic=>{
-    const b=document.createElement('button');
-    b.className='option'; b.innerHTML=`<div class="big">${ic}</div><strong>${ic}</strong>`;
-    b.addEventListener('click', ()=> pushUser(ic));
-    row.appendChild(b);
-  });
-  const seqEl = document.createElement('p');
-  seqEl.style.fontWeight='700';
-  seqEl.textContent = `Secuencia: ${seq.join(' ')} (mostrada por unos segundos)`;
-  optionsWrap.append(seqEl, row);
-
-  // Ocultar la secuencia después de 2.5s para real reto
-  setTimeout(()=>{ seqEl.textContent = 'Ahora repite la secuencia.'; }, 2500);
-
-  const user = [];
-  function pushUser(ic){
-    user.push(ic);
-    if(user.length===seq.length){
-      addStep();
-      if(user.every((v,i)=>v===seq[i])){
-        SCENARIOS[4].onComplete();
-        modal.classList.remove('active');
-      }else{
-        sfx.error(); speak('Secuencia incorrecta. Puedes intentarlo de nuevo.');
+function checkAnswer(optIdx) {
+  const opt = challenges[state.currentChallengeIdx].options[optIdx];
+  speak(opt.msg);
+  
+  if (opt.ok) {
+    state.completedChallenges.push(state.currentChallengeIdx);
+    setTimeout(() => {
+      document.getElementById('modal').style.display = 'none';
+      if (state.completedChallenges.length === challenges.length) {
+        endGame(true);
       }
-    }
+    }, 2000);
+  } else {
+    state.energy -= 25;
+    updateHUD();
+    if (state.energy <= 0) endGame(false);
   }
 }
 
-/* -------------------------
-   GESTIÓN DE EVENTOS: MAPA Y PUNTOS
-   ------------------------- */
-let currentPointId = null;
-document.querySelectorAll('.nav-point').forEach(p=>{
-  p.addEventListener('click', ()=>{
-    if(state.paused) return;
-    const id = Number(p.dataset.id);
-    currentPointId = id;
-    moveSubToPoint(id);
-    openScenario(id);
-  });
-  p.addEventListener('keydown', (e)=>{
-    if(e.key==='Enter' || e.key===' '){
-      e.preventDefault();
-      p.click();
-    }
-  });
-});
-
-/* -------------------------
-   INICIO / REINICIO DE PARTIDA
-   ------------------------- */
-function resetGame(){
-  state.energy = state.energyMax;
-  state.steps = 0;
-  state.treasures = 0;
-  state.completed.clear();
-  state.paused = false;
-  state.parBuffer = '';
-  treasuresEl.innerHTML = '';
-  setEnergy(state.energy);
-  stepsEl.textContent = '0';
-  moveSubToPoint(0); // posición inicial aproximada
-  show('brief');
-}
-startBtn.addEventListener('click', ()=>{
-  show('map');
-  moveSubToPoint(1);
-  speak('Zarpamos. Recuerda: candado dorado, logos conocidos y bengala si hay duda.');
-});
-btnReplay.addEventListener('click', resetGame);
-
-/* -------------------------
-   HERRAMIENTAS
-   ------------------------- */
-btnClose.addEventListener('click', useCloseTool);
-btnFlare.addEventListener('click', ()=>{
-  if(state.paused){ // si está en pausa por P.A.R., también activa
-    speak('Protocolo activo. El Almirante responde con ruta segura.');
-  }
-  useFlare();
-});
-btnPAR.addEventListener('click', activatePAR);
-
-/* -------------------------
-   NARRACIÓN ON/OFF
-   ------------------------- */
-btnVoice.addEventListener('click', ()=>{
-  state.voiceOn = !state.voiceOn;
-  btnVoice.setAttribute('aria-pressed', String(state.voiceOn));
-  btnVoice.textContent = state.voiceOn ? '🔊 Voz: ON' : '🔊 Voz: OFF';
-  if(state.voiceOn){
-    // Forzar carga de voces en algunos navegadores
-    speechSynthesis.getVoices();
-    speak('Narración activada.');
-  }
-});
-
-/* -------------------------
-   MODAL: CERRAR
-   ------------------------- */
-modalClose.addEventListener('click', ()=> modal.classList.remove('active'));
-
-/* -------------------------
-   DETECCIÓN DE CLAVE ESPECIAL "PAR"
-   - Captura de teclado global. Al escribir P A R (en cualquier lugar):
-     * pausa el juego
-     * activa bengala y recompensa del Protocolo de Acción Responsable
-   ------------------------- */
-window.addEventListener('keydown', (e)=>{
-  // Ignorar si hay inputs reales (no tenemos) — aquí se captura global
-  const ch = (e.key || '').toUpperCase();
-  if(!ch || ch.length>1) return;
-  state.parBuffer = (state.parBuffer + ch).slice(-3);
-  if(state.parBuffer === 'PAR'){
-    activatePAR();
-  }
-});
-
-/* -------------------------
-   PROTOCOLO P.A.R.
-   ------------------------- */
-function activatePAR(){
-  if(state.paused) return; // evitar repetidos
-  state.paused = true;
-  sfx.radio();
-  // Pausar modal en pantalla y mostrar mensaje
-  speak('Protocolo de Acción Responsable activado. Excelente decisión. Recompensa concedida.');
-  // Recompensa especial: +1 tesoro y superar remolino si está activo
-  addTreasure();
-  // Activar bengala automáticamente
-  useFlare();
-  // Mostrar feedback visual
-  alert('✅ P.A.R. activado: juego en pausa breve, Bengala desplegada y recompensa especial obtenida.');
-  // Reanudar
-  setTimeout(()=>{ state.paused=false; }, 600);
+function updateHUD() {
+  document.getElementById('energy-bar').style.width = state.energy + "%";
 }
 
-/* -------------------------
-   PERSONALIZACIÓN DEL SUBMARINO (RECOMPENSAS)
-   ------------------------- */
-function setSubSkin(hex){
-  state.subSkin = hex;
-  const grad = submarine.querySelector('#subGrad');
-  if(grad){
-    grad.children[0].setAttribute('stop-color', hex);
-    // añadir un segundo tono más oscuro
-    grad.children[1].setAttribute('stop-color', shade(hex, -0.45));
-  }
-}
-document.querySelectorAll('[data-skin]').forEach(b=>{
-  b.addEventListener('click', ()=> setSubSkin(b.getAttribute('data-skin')));
-});
-function shade(hex, lum){
-  // Ajuste rápido de color
-  hex = String(hex).replace(/[^0-9a-f]/gi,'');
-  if(hex.length<6) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-  let rgb="#", c;
-  for(let i=0;i<3;i++){
-    c = parseInt(hex.substr(i*2,2),16);
-    c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-    rgb += ('00'+c).substr(c.length);
-  }
-  return rgb;
+function updateSubmarinePosition(idx) {
+  const points = [document.getElementById('p1'), document.getElementById('p2'), document.getElementById('p3')];
+  const target = points[idx];
+  const sub = document.getElementById('submarine');
+  sub.style.left = target.style.left;
+  sub.style.top = (parseInt(target.style.top) - 8) + "%";
 }
 
-/* -------------------------
-   CONTROL DE ENERGÍA: penalización leve por abrir modales erróneos muchas veces
-   (evitar abuso de intentos aleatorios)
-   ------------------------- */
-let modalOpens = 0;
-const mapEl = document.querySelector('.map');
-mapEl.addEventListener('click', (e)=>{
-  if(e.target.classList.contains('nav-point')){
-    modalOpens++;
-    if(modalOpens % 5 === 0){ // cada 5 intentos consume 5% de energía
-      setEnergy(state.energy - 5);
-    }
+/* --- HERRAMIENTAS --- */
+function useFlare() {
+  speak("¡Bengala de ayuda! El Almirante dice: No te arriesgues ante lo desconocido, ¡pide ayuda siempre!");
+}
+
+function activatePAR() {
+  speak("Protocolo P.A.R. activado: Parar, Avisar y Respetar. ¡Esa es la clave del éxito!");
+}
+
+/* --- FINAL Y REINICIO --- */
+function endGame(victory) {
+  document.getElementById('screen-map').classList.remove('active');
+  document.getElementById('modal').style.display = 'none';
+  document.getElementById('screen-end').classList.add('active');
+  
+  if (victory) {
+    document.getElementById('end-title').innerText = "¡Explorador Maestro!";
+    document.getElementById('end-icon').innerText = "🏝️";
+    document.getElementById('end-msg').innerText = "¡Increíble! Has llegado a la Isla del Tesoro Educativo.";
+    speak("¡Misión cumplida! Eres un Explorador Maestro del Ciber-Océano.");
+  } else {
+    document.getElementById('end-title').innerText = "Submarino sin Energía";
+    document.getElementById('end-icon').innerText = "⚓";
+    document.getElementById('end-msg').innerText = "Caíste en muchas trampas. ¡Inténtalo de nuevo!";
+    speak("Se agotó la energía. Regresemos al puerto para practicar más.");
   }
-});
+}
 
-/* -------------------------
-   INICIALIZAR
-   ------------------------- */
-resetGame();
+function restartGame() {
+  // Reiniciar estado
+  state.energy = 100;
+  state.briefingIndex = 0;
+  state.completedChallenges = [];
+  state.currentChallengeIdx = null;
+  
+  // Reiniciar UI
+  updateHUD();
+  document.getElementById('screen-end').classList.remove('active');
+  document.getElementById('screen-intro').classList.add('active');
+  document.getElementById('brief-box').innerHTML = `<p>Soy tu Almirante. Pulsa el botón verde para aprender las reglas.</p>`;
+  
+  speak("¡Hola de nuevo! Vamos a prepararnos otra vez.");
+}
 
-/* =========================
-   FIN DE LA LÓGICA DEL JUEGO
-   ========================= */
+// Iniciar con gesto del usuario (obligatorio para audio en navegadores)
+document.addEventListener('click', function init() {
+  speak("Bienvenido Capitán.");
+  document.removeEventListener('click', init);
+}, { once: true });
+
 </script>
 </body>
 </html>
